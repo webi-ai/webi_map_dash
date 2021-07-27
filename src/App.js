@@ -3,7 +3,6 @@ import './App.css';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import MapboxDirections from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions'
-import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css'
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 
@@ -44,12 +43,14 @@ class App extends React.Component {
                     enableHighAccuracy: true
                            },
                         trackUserLocation: true
-                })
+                }), "bottom-right"
             );
     //nav controls
-    map.addControl(new mapboxgl.NavigationControl());           
+    map.addControl(new mapboxgl.NavigationControl(),"bottom-right");     
+    
+    
     // Add the geocoder to the map
-    map.addControl(geocoder);
+    map.addControl(geocoder,"bottom-left");
     
      }  
     render() {
