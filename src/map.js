@@ -5,7 +5,6 @@ import React, {useState,useRef, useCallback} from 'react';
 import Geocoder from 'react-map-gl-geocoder';
 import MapGL from "react-map-gl";
 import Directions from './directions'
-import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css'
 
 
 
@@ -73,6 +72,7 @@ function Map() {
         {...viewport}
         width="100%"
         height="100%"
+        mapStyle="mapbox://styles/mapbox/dark-v9"
         onViewportChange={handleViewportChange}
         mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
       > 

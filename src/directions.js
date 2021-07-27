@@ -1,6 +1,7 @@
 import { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import MapboxDirections from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions'
+import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css'
 
 const VALID_POSITIONS = ['top-left', 'top-right', 'bottom-left', 'bottom-right']
 

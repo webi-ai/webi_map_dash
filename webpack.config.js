@@ -1,16 +1,26 @@
 module.exports = {
-    module: {
-      rules: [
-        {
-            use: {
-                loader: 'babel-loader',
-                options: {
-                  presets: ['my-custom-babel-preset'],
+  mode: 'development',
 
-                  ignore: [ './node_modules/mapbox-gl/dist/mapbox-gl.js' ]
-                }
-              }
-        },
-      ],
-    },
-  };
+  entry: {
+    app: './index.js'
+  },
+
+  devtool: 'source-map',
+
+  module: {
+    rules: [
+      {
+        // Compile ES2015 using babel
+        test: /\.js$/,
+        exclude: [/node_modules/],
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: ['@babel/env', '@babel/react']
+            }
+          }
+        ]
+      }
+    ]
+  }
