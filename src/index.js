@@ -6,9 +6,7 @@ import Map from './map';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Map />
-  </React.StrictMode>,
+    <Map />,
   document.getElementById('root')
 );
 
