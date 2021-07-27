@@ -3,10 +3,12 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 import Map from './map';
+import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
-    <Map />,
+    <App />,
+
   document.getElementById('root')
 );
 

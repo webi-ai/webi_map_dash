@@ -1,15 +1,19 @@
 
-import {StaticMap, MapContext, NavigationControl,GeolocateControl} from 'react-map-gl';
+import {StaticMap,NavigationControl,GeolocateControl} from 'react-map-gl';
 import DeckGL, {GeoJsonLayer, ArcLayer} from 'deck.gl';
 import React, {useState,useRef, useCallback} from 'react';
 import Geocoder from 'react-map-gl-geocoder';
 import MapGL from "react-map-gl";
 import Directions from './directions'
-
+import mapboxgl from 'mapbox-gl';
+// @ts-ignore
+// eslint-disable-next-line import/no-webpack-loader-syntax
+mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default;
 
 
 // Set your mapbox access token here
 const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1Ijoid2ViY29kZXJ6IiwiYSI6ImNrcjZ1N3oxeDB0cHoyd3FsYjk0am9kY3MifQ.lw9n5DtqV-PjMyL4k6jwQA';
+mapboxgl.accessToken= MAPBOX_ACCESS_TOKEN
 
 
 
@@ -20,13 +24,14 @@ const NAV_CONTROL_STYLE = {
 };
 
 
+
+
 function GeoLocate() {
   const geolocateControlStyle= {
     position: 'fixed',
     right: 10,
     bottom: 118
   };
-  const {map} = React.useContext(MapContext)
   return (
     
     <GeolocateControl
@@ -67,14 +72,16 @@ function Map() {
 
   return (
     <div style={{ height: "100vh" }}>
+
       <MapGL
         ref={mapRef}
         {...viewport}
         width="100%"
         height="100%"
-        mapStyle="mapbox://styles/mapbox/dark-v9"
+        StaticMap={StaticMap}
         onViewportChange={handleViewportChange}
         mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
+
       > 
         <Geocoder
           mapRef={mapRef}
