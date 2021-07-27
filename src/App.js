@@ -4,8 +4,8 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import MapboxDirections from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions'
 import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css'
-
-
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 
 mapboxgl.accessToken = 'pk.eyJ1Ijoid2ViY29kZXJ6IiwiYSI6ImNrcjZ1N3oxeDB0cHoyd3FsYjk0am9kY3MifQ.lw9n5DtqV-PjMyL4k6jwQA';
 class App extends React.Component {
@@ -30,8 +30,28 @@ class App extends React.Component {
       // Integrates directions control with map
       map.addControl(directions, 'top-left');
     
-    }
-      
+    var geocoder = new MapboxGeocoder({ // Initialize the geocoder
+        accessToken: mapboxgl.accessToken, // Set the access token
+        mapboxgl: mapboxgl, // Set the mapbox-gl instance
+        marker: false, // Do not use the default marker style
+      });
+   
+
+    // Add geolocate control to the map.
+    map.addControl(
+            new mapboxgl.GeolocateControl({
+                    positionOptions: {
+                    enableHighAccuracy: true
+                           },
+                        trackUserLocation: true
+                })
+            );
+    //nav controls
+    map.addControl(new mapboxgl.NavigationControl());           
+    // Add the geocoder to the map
+    map.addControl(geocoder);
+    
+     }  
     render() {
       return (
         // Populates map by referencing map's container property
