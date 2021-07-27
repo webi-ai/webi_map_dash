@@ -2,7 +2,7 @@ module.exports = {
   mode: 'development',
 
   entry: {
-    app: './map.js'
+    app: './index.js'
   },
 
   devtool: 'source-map',
@@ -17,23 +17,12 @@ module.exports = {
           {
             loader: 'babel-loader',
             options: {
-              presets: ['@babel/env', '@babel/react']
+              presets: ['@babel/env', '@babel/react','my-custom-babel-preset'],
+              ignore: [ './node_modules/mapbox-gl/dist/mapbox-gl.js' ]
             }
           }
         ]
       }
     ]
   },
-  webpack: (config) => {
-    config.module.rules.push({
-        resolve:{
-            alias: {
-                ...config.resolve.alias,
-                'mapbox-gl': 'maplibre-gl'
-            }
-        }
-    })
-  // Important: return the modified config
-  return config
-},
 }
