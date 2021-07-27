@@ -16,7 +16,7 @@ class App extends React.Component {
       const map = new mapboxgl.Map({
         container: this.mapWrapper,
         style: 'mapbox://styles/mapbox/streets-v10',
-        center: [-73.985664, 40.748514],
+        center: [-122.4376, 37.7577],
         zoom: 12
       });
   
