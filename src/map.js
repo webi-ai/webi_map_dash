@@ -8,6 +8,7 @@ import Directions from './directions'
 import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css'
 
 
+
 // Set your mapbox access token here
 const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1Ijoid2ViY29kZXJ6IiwiYSI6ImNrcjZ1N3oxeDB0cHoyd3FsYjk0am9kY3MifQ.lw9n5DtqV-PjMyL4k6jwQA';
 
