@@ -53,7 +53,7 @@ class App extends React.Component {
     map.addControl(new MapboxTraffic(),"top-right");
     
     // Add the geocoder to the map
-    map.addControl(geocoder, "bottom-left");
+    //map.addControl(geocoder, "bottom-left");
     
      }  
     render() {
