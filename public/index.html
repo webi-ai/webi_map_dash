@@ -24,11 +24,22 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
+    
+    <link href="/static/css/cloud_base.css?t=1623654207" rel="stylesheet" />
+  <style>
+    #map {position: absolute; top: 0; right: 0; bottom: 0; left: 0;}
+  </style>
     <title>webI Maps</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+    <div id="map">
+      <a href="https://www.webi.ai" style="position:absolute;left:10px;bottom:10px;z-index:999;"><img src="webi-maps1.png" width="125" height="150" alt="webI logo"></a>
+      <p>div class="maplibregl-ctrl-attrib-inner mapboxgl-ctrl-attrib-inner" role="list"><<a href="https://www.webi.ai/" target="_blank">© webI Maps</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap contributors</a></p>
+    
+    </div>  
+    
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.

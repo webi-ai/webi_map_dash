@@ -6,26 +6,28 @@ import MapboxDirections from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-direct
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import MapboxTraffic from '@mapbox/mapbox-gl-traffic';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
-import  { ArcLayer} from 'deck.gl';
-
+import  { ArcLayer,ContourLayer} from 'deck.gl';
+import {COORDINATE_SYSTEM} from '@deck.gl/core';
 import { Deck } from "@deck.gl/core";
 import GL from '@luma.gl/constants';
-import { ScatterplotLayer, } from "@deck.gl/layers";
+import maplibregl from 'maplibre-gl';
+
+import { ScatterplotLayer} from "@deck.gl/layers";
 import { MapboxLayer } from "@deck.gl/mapbox";
 import {TerrainLayer} from '@deck.gl/geo-layers';
-
+import {PointCloudLayer} from '@deck.gl/layers';
 mapboxgl.accessToken = 'pk.eyJ1Ijoid2ViY29kZXJ6IiwiYSI6ImNrcjZ1N3oxeDB0cHoyd3FsYjk0am9kY3MifQ.lw9n5DtqV-PjMyL4k6jwQA';
 class App extends React.Component {
 
     componentDidMount() {
   
       // Creates new map instance
-      const map = new mapboxgl.Map({
-        container: this.mapWrapper,
-        style: 'mapbox://styles/mapbox/streets-v10',
-        center: [-122.4376, 37.7577],
-        zoom: 12
-      });
+      const map = new maplibregl.Map({
+        container: 'map',
+        style: 'https://api.maptiler.com/maps/streets/style.json?key=Z2xVIwqvxK06NnhO6lTM', // stylesheet location
+        center: [-122.5233, 37.6493], // starting position [lng, lat]
+        zoom: 9 // starting zoom
+        });
   
       // Creates new directions control instance
       const directions = new MapboxDirections({
@@ -46,7 +48,7 @@ class App extends React.Component {
 
     // Add geolocate control to the map.
     map.addControl(
-            new mapboxgl.GeolocateControl({
+            new maplibregl.GeolocateControl({
                     positionOptions: {
                     enableHighAccuracy: true
                            },
@@ -54,8 +56,8 @@ class App extends React.Component {
                 }), "top-right"
             );
     //nav controls
-    map.addControl(new mapboxgl.NavigationControl(),"top-right");     
-    map.addControl(new MapboxTraffic(),"top-right");
+    map.addControl(new maplibregl.NavigationControl(),"top-right");     
+    //map.addControl(new MapboxTraffic(),"top-right"); //requires mapbox-gl map
 
 
     //deck layers
@@ -91,6 +93,10 @@ class App extends React.Component {
         texture: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/terrain-mask.png',
         bounds: [-122.5233, 37.6493, -122.3566, 37.8159],
       });
+      
+      
+      //arc layer
+
 
     const arclayer =  new ArcLayer({
         id: 'deckgl-arc',
@@ -105,11 +111,36 @@ class App extends React.Component {
         getWidth: 8
       });
 
+      // contour layer
+      const contourLayer = new ContourLayer({
+        id: 'contourLayer',
+        data:
+          'https://raw.githubusercontent.com/visgl/deck.gl-data/master/examples/screen-grid/ca-transit-stops.json',
+        getPosition: d => d,
+        contours: [
+          {threshold: 1, color: [255, 0, 0], strokeWidth: 4},
+          {threshold: 5, color: [0, 255, 0], strokeWidth: 2},
+          {threshold: [6, 10], color: [0, 0, 255, 128]}
+        ]});
+
+        //point cloud layer
+
+      const pointCloudLayer = new PointCloudLayer({
+        coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
+        coordinateOrigin: [-122.4004935, 37.7900486, 100],  // anchor point in longitude/latitude/altitude
+        data: [
+          {position: [33.22, 109.87, 1.455]}, // meter offsets from the coordinate origin
+
+        ],
+
+      })  
+
+
 
       //deck integration
     const deck = new Deck({
         gl: map.painter.context.gl,
-        layers: [arclayer],
+        layers: [],//scatterLayer, terrainLayer, arclayer, contourLayer, pointCloudLayer
         initialViewState: {
           latitude: 37.6493,
           longitude: -122.5233,
@@ -117,17 +148,20 @@ class App extends React.Component {
         },
         controller: true
       });
+    // Add the geocoder to the map
+   // map.addControl(geocoder, "bottom-left");
+
 
     //add deck layer
     const deckLayers= new MapboxLayer({ id: "deck-gl-layer", deck });
     map.on("load", () => {
-        //map.addLayer(deckLayers);
+        map.addLayer(deckLayers);
 
 
 
-
+  //loads 3d building layer on map loading
       const firstLabelLayerId = map.getStyle().layers.find(layer => layer.type === 'symbol').id;
-    //loads 3d building layer on map loading
+  
       map.addLayer({
         'id': '3d-buildings',
         'source': 'composite',
@@ -154,20 +188,16 @@ class App extends React.Component {
         }
       }, firstLabelLayerId);
 
-
-
-
-
-
-
       });
 
 
 
-    // Add the geocoder to the map
-    //map.addControl(geocoder, "bottom-left");
+
     
      } 
+     
+
+
      
     render() {
       return (

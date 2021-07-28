@@ -4,14 +4,12 @@
   }
 .mapboxgl-ctrl button.mapboxgl-ctrl-map .mapboxgl-ctrl-icon{
 
-    background-image: url('toppng.com-road-map-svg-road-icon-white-1024x1024.png')
+    background-image: url('')
 }
 
 .mapboxgl-ctrl button.mapboxgl-ctrl-traffic .mapboxgl-ctrl-icon{
-
-    background-image: url('toppng.com-road-map-svg-road-icon-white-1024x1024.png')
+    background-image: url('')
 }
-
 
 
 body,
@@ -25,3 +23,19 @@ html {
   height: 100%;
   background-color: gray;
 }
+
+
+.img {
+
+    background-image: url('')
+
+
+}
+
+.a{
+
+    background-image: url('');
+    background-color: gray;
+}
+
+
