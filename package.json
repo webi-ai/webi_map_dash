@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@deck.gl/mapbox": "^8.5.0",
     "@mapbox/mapbox-gl-directions": "^4.1.0",
     "@mapbox/mapbox-gl-geocoder": "^4.7.2",
     "@mapbox/mapbox-gl-traffic": "^1.0.2",

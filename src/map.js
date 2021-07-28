@@ -1,6 +1,5 @@
 
 import {StaticMap,NavigationControl,GeolocateControl} from 'react-map-gl';
-import DeckGL, {GeoJsonLayer, ArcLayer} from 'deck.gl';
 import React, {useState,useRef, useCallback} from 'react';
 import Geocoder from 'react-map-gl-geocoder';
 import MapGL from "react-map-gl";

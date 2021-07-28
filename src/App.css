@@ -2,3 +2,26 @@
     width: 100vw;
     height: 100vh;
   }
+.mapboxgl-ctrl button.mapboxgl-ctrl-map .mapboxgl-ctrl-icon{
+
+    background-image: url('toppng.com-road-map-svg-road-icon-white-1024x1024.png')
+}
+
+.mapboxgl-ctrl button.mapboxgl-ctrl-traffic .mapboxgl-ctrl-icon{
+
+    background-image: url('toppng.com-road-map-svg-road-icon-white-1024x1024.png')
+}
+
+
+
+body,
+html {
+  margin: 0;
+  height: 100%;
+}
+
+#map,
+#root {
+  height: 100%;
+  background-color: gray;
+}
