@@ -16,18 +16,57 @@ import { ScatterplotLayer} from "@deck.gl/layers";
 import { MapboxLayer } from "@deck.gl/mapbox";
 import {TerrainLayer} from '@deck.gl/geo-layers';
 import {PointCloudLayer} from '@deck.gl/layers';
+
+import {GeoJsonLayer, PolygonLayer} from '@deck.gl/layers';
+import {LightingEffect, AmbientLight, _SunLight as SunLight} from '@deck.gl/core';
+import {scaleThreshold} from 'd3-scale';
+
+
+
 mapboxgl.accessToken = 'pk.eyJ1Ijoid2ViY29kZXJ6IiwiYSI6ImNrcjZ1N3oxeDB0cHoyd3FsYjk0am9kY3MifQ.lw9n5DtqV-PjMyL4k6jwQA';
+
+
+
+
+ // eslint-disable-line
+
+
+export const COLOR_SCALE = scaleThreshold()
+  .domain([-0.6, -0.45, -0.3, -0.15, 0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1.05, 1.2])
+  .range([
+    [65, 182, 196],
+    [127, 205, 187],
+    [199, 233, 180],
+    [237, 248, 177],
+    // zero
+    [255, 255, 204],
+    [255, 237, 160],
+    [254, 217, 118],
+    [254, 178, 76],
+    [253, 141, 60],
+    [252, 78, 42],
+    [227, 26, 28],
+    [189, 0, 38],
+    [128, 0, 38]
+  ]);
+
+
 class App extends React.Component {
 
     componentDidMount() {
-  
+      
+
       // Creates new map instance
       const map = new maplibregl.Map({
         container: 'map',
-        style: 'https://api.maptiler.com/maps/streets/style.json?key=Z2xVIwqvxK06NnhO6lTM', // stylesheet location
-        center: [-122.5233, 37.6493], // starting position [lng, lat]
+        style: 'https://api.maptiler.com/maps/streets/style.json?key=Z2xVIwqvxK06NnhO6lTM', // stylesheet location - https://api.maptiler.com/maps/streets/style.json?key=Z2xVIwqvxK06NnhO6lTM
+       center: [-122.5233, 37.6493], // starting position [lng, lat]
         zoom: 9 // starting zoom
         });
+        //https://api.maptiler.com/maps/eec8273f-d9d8-4d03-883a-cb9c35cc27d8/style.json?key=Z2xVIwqvxK06NnhO6lTM
+        //http://64.227.67.107:8080/styles/basic-preview/style.json for self hosted
+        //http://64.227.67.107/styles/osm-bright/style.json
+        //http://mapserver.webi.ai/styles/osm-bright/style.json
   
       // Creates new directions control instance
       const directions = new MapboxDirections({
@@ -37,7 +76,6 @@ class App extends React.Component {
       });
   
       // Integrates directions control with map
-      map.addControl(directions, 'top-left');
     
     var geocoder = new MapboxGeocoder({ // Initialize the geocoder
         accessToken: mapboxgl.accessToken, // Set the access token
@@ -45,10 +83,27 @@ class App extends React.Component {
         marker: false, // Do not use the default marker style
       });
 
+    const ambientLight = new AmbientLight({
+        color: [255, 255, 255],
+        intensity: 1.0
+      });
+      
+    const dirLight = new SunLight({
+        timestamp: Date.UTC(2019, 7, 1, 22),
+        color: [255, 255, 255],
+        intensity: 1.0,
+        _shadow: true
+      });
+
+
+    const lightingEffect = new LightingEffect({ambientLight, dirLight});
+    lightingEffect.shadowColor = [0, 0, 0, 0.5];
+
+
 
     // Add geolocate control to the map.
     map.addControl(
-            new maplibregl.GeolocateControl({
+            new mapboxgl.GeolocateControl({
                     positionOptions: {
                     enableHighAccuracy: true
                            },
@@ -56,8 +111,9 @@ class App extends React.Component {
                 }), "top-right"
             );
     //nav controls
-    map.addControl(new maplibregl.NavigationControl(),"top-right");     
+    map.addControl(new mapboxgl.NavigationControl(),"top-right");     
     //map.addControl(new MapboxTraffic(),"top-right"); //requires mapbox-gl map
+    map.addControl(directions, 'top-left');
 
 
     //deck layers
@@ -93,7 +149,32 @@ class App extends React.Component {
         texture: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/terrain-mask.png',
         bounds: [-122.5233, 37.6493, -122.3566, 37.8159],
       });
-      
+
+    const landCover = [[[-123.0, 49.196], [-123.0, 49.324], [-123.306, 49.324], [-123.306, 49.196]]];
+
+    const polygonLayer = new PolygonLayer({
+      id: 'ground',
+      data: landCover,
+      stroked: false,
+      getPolygon: f => f,
+      getFillColor: [0, 0, 0, 0]
+    });
+
+    const geoJSONLayer = new GeoJsonLayer({
+      id: 'geojson',
+      data: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/examples/geojson/vancouver-blocks.json',
+      opacity: 0.8,
+      stroked: false,
+      filled: true,
+      extruded: true,
+      wireframe: true,
+      getElevation: f => Math.sqrt(f.properties.valuePerSqm) * 10,
+      getFillColor: f => COLOR_SCALE(f.properties.growth),
+      getLineColor: [255, 255, 255],
+      pickable: true
+    }); 
+
+
       
       //arc layer
 
@@ -135,12 +216,12 @@ class App extends React.Component {
 
       })  
 
-
+    
 
       //deck integration
     const deck = new Deck({
         gl: map.painter.context.gl,
-        layers: [],//scatterLayer, terrainLayer, arclayer, contourLayer, pointCloudLayer
+        layers: [geoJSONLayer, polygonLayer],//scatterLayer, terrainLayer, arclayer, contourLayer, pointCloudLayer ,geoJSONLayer, polygonLayer,
         initialViewState: {
           latitude: 37.6493,
           longitude: -122.5233,
@@ -156,12 +237,14 @@ class App extends React.Component {
     const deckLayers= new MapboxLayer({ id: "deck-gl-layer", deck });
     map.on("load", () => {
         map.addLayer(deckLayers);
+        
 
 
 
   //loads 3d building layer on map loading
-      const firstLabelLayerId = map.getStyle().layers.find(layer => layer.type === 'symbol').id;
+      //const firstLabelLayerId = map.getStyle().layers.find(layer => layer.type === 'symbol').id;
   
+      
       map.addLayer({
         'id': '3d-buildings',
         'source': 'composite',
@@ -186,7 +269,7 @@ class App extends React.Component {
             ],
             'fill-extrusion-opacity': .6
         }
-      }, firstLabelLayerId);
+      }); //firstLabelLayerId before parentheses close to add buildings back in 
 
       });
 
@@ -201,6 +284,7 @@ class App extends React.Component {
      
     render() {
       return (
+        
         // Populates map by referencing map's container property
         <div ref={el => (this.mapWrapper = el)} className="mapWrapper" />
         

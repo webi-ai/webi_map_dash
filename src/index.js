@@ -5,10 +5,11 @@ import './index.css';
 import Map from './map';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import Directions from "./directions"
 
 ReactDOM.render(
-    <App />,
-
+    
+    <App/>,
   document.getElementById('root')
 );
 
