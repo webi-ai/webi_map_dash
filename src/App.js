@@ -96,8 +96,13 @@ class App extends React.Component {
       });
 
 
-    const lightingEffect = new LightingEffect({ambientLight, dirLight});
-    lightingEffect.shadowColor = [0, 0, 0, 0.5];
+   
+      const lightingEffect = new LightingEffect({ambientLight, dirLight});
+        lightingEffect.shadowColor = [0, 0, 0, 0.5];
+
+        
+    
+    
 
 
 
@@ -221,7 +226,8 @@ class App extends React.Component {
       //deck integration
     const deck = new Deck({
         gl: map.painter.context.gl,
-        layers: [geoJSONLayer, polygonLayer],//scatterLayer, terrainLayer, arclayer, contourLayer, pointCloudLayer ,geoJSONLayer, polygonLayer,
+        layers: [geoJSONLayer],//scatterLayer, terrainLayer, arclayer, contourLayer, pointCloudLayer ,geoJSONLayer, polygonLayer,
+        effects: [lightingEffect],
         initialViewState: {
           latitude: 37.6493,
           longitude: -122.5233,
@@ -237,7 +243,7 @@ class App extends React.Component {
     const deckLayers= new MapboxLayer({ id: "deck-gl-layer", deck });
     map.on("load", () => {
         map.addLayer(deckLayers);
-        
+
 
 
 
@@ -267,7 +273,7 @@ class App extends React.Component {
                 15, 0,
                 15.05, ["get", "min_height"]
             ],
-            'fill-extrusion-opacity': .6
+            'fill-extrusion-opacity': .2
         }
       }); //firstLabelLayerId before parentheses close to add buildings back in 
 
